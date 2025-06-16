@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-using System.Linq; // LINQ 사용 (OrderBy)
+using System.Linq; // LINQ 사용
 
 public class Pathfinding : MonoBehaviour
 {
@@ -11,8 +11,7 @@ public class Pathfinding : MonoBehaviour
     public bool allowDiagonalMovement = true; // 대각선 이동 허용 여부
 
     private Grid<Node> grid; // 노드 정보를 담을 그리드
-
-    // Node 클래스 (Pathfinding 클래스 내부에 정의)
+    
     public class Node
     {
         public Vector3Int position; // 타일맵에서의 셀 좌표
@@ -27,7 +26,7 @@ public class Pathfinding : MonoBehaviour
         {
             position = pos;
             isWalkable = walkable;
-            gCost = int.MaxValue; // 초기 gCost는 무한대로 설정
+            gCost = int.MaxValue;
             hCost = 0;
             parent = null;
         }
@@ -96,8 +95,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
-
-    // AStarSetupManager에서 맵 생성 후 호출 가능하도록 public으로 변경
+    
     public void InitializeGrid()
     {
         if (tilemap == null)
@@ -114,8 +112,7 @@ public class Pathfinding : MonoBehaviour
             grid = null; // 유효하지 않은 경계면 그리드를 null로 설정
             return;
         }
-
-        // Grid 생성 시, Node 객체가 자신의 실제 타일맵 위치를 알도록 수정된 생성자 사용
+        
         grid = new Grid<Node>(bounds.size.x, bounds.size.y, bounds.min,
             (g, cellPos) => { // cellPos는 실제 타일맵 좌표
                 bool isInitiallyWalkable = tilemap.HasTile(cellPos);
@@ -146,12 +143,8 @@ public class Pathfinding : MonoBehaviour
             if (node == null) continue;
 
             node.ResetCosts(); // 경로 탐색 전 비용 초기화
-
-            // AStarSetupManager가 Tilemap에 장애물 타일을 직접 설정한다고 가정
-            // 또는 obstaclePositions 세트를 사용
             TileBase currentTile = tilemap.GetTile(node.position);
-            // AStarSetupManager에서 설정한 obstacleTile과 비교할 수도 있음
-            // 여기서는 obstaclePositions 세트를 우선적으로 사용
+
 
             if (obstaclePositions.Contains(node.position))
             {
@@ -166,8 +159,6 @@ public class Pathfinding : MonoBehaviour
                 node.isWalkable = true;
             }
 
-            // 시작점과 도착점은 항상 walkable로 간주 (장애물 위에 있어도 경로 탐색은 시도 가능)
-            // 실제로는 AStarSetupManager에서 시작/끝점에는 장애물을 못 놓게 하는 것이 좋음
             if (node.position == startPos || node.position == endPos)
             {
                 node.isWalkable = true;
@@ -298,7 +289,6 @@ public class Pathfinding : MonoBehaviour
             if (neighbourNode != null)
             {
                 // 대각선 이동 추가 조건: 벽 모서리를 통과하지 못하도록 설정
-                // 예: (x+1,y)와 (x,y+1)이 모두 벽이면 (x+1,y+1)로 이동 불가
                 Vector3Int horizontalPos = new Vector3Int(node.position.x + offset.x, node.position.y, node.position.z);
                 Vector3Int verticalPos = new Vector3Int(node.position.x, node.position.y + offset.y, node.position.z);
                 
@@ -354,7 +344,7 @@ public class Pathfinding : MonoBehaviour
         return path;
     }
 
-    // (선택 사항) 디버깅을 위해 Gizmos를 사용하여 그리드나 노드 정보 시각화
+    //  디버깅을 위해 Gizmos를 사용하여 그리드나 노드 정보 시각화
     // void OnDrawGizmos()
     // {
     //     if (grid != null)
