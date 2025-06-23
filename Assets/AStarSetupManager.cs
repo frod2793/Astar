@@ -238,7 +238,7 @@ public class AStarSetupManager : MonoBehaviour
                     tilemap.SetTile(cellPos, obstacleTile); // 장애물 설치
                 }
 
-                Debug.Log("Obstacle toggled at: " + cellPos);
+                Debug.Log("장애물 토글됨: " + cellPos);
                 break;
         }
     }
@@ -247,7 +247,7 @@ public class AStarSetupManager : MonoBehaviour
     {
         if (!startPointSet || !endPointSet)
         {
-            Debug.LogError("Please set both start and end points before running A*.");
+            Debug.LogError("A* 실행 전 시작점과 도착점을 모두 설정해주세요.");
             return;
         }
 
@@ -265,12 +265,12 @@ public class AStarSetupManager : MonoBehaviour
 
         if (currentFoundPath != null && currentFoundPath.Count > 0)
         {
-            Debug.Log("Path found! Length: " + currentFoundPath.Count);
+            Debug.Log("경로 찾음! 길이: " + currentFoundPath.Count);
             DisplayPath(currentFoundPath);
         }
         else
         {
-            Debug.LogWarning("Path not found.");
+            Debug.LogWarning("경로를 찾을 수 없습니다.");
         }
 
         currentMode = PlacementMode.None; // 실행 후 모드 초기화
